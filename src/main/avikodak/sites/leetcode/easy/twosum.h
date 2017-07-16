@@ -1,10 +1,10 @@
 /****************************************************************************************************************************************************
- *  File Name                   : getpairforsum.h
- *  File Location               : /algos_v3/src/main/avikodak/sites/geeksforgeeks/arrays/page21/getpairforsum.h
- *  Created on                  : May 6, 2017 :: 11:55:04 AM
+ *  File Name                   : twosum.h
+ *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/twosum.h
+ *  Created on                  : Jul 16, 2017 :: 5:47:44 PM
  *  Author                      : avikodak
  *  Testing Status              : TODO
- *  URL                         : TODO
+ *  URL                         : https://leetcode.com/problems/two-sum/#/description
  ****************************************************************************************************************************************************/
 
 /****************************************************************************************************************************************************/
@@ -73,8 +73,8 @@ using namespace __gnu_cxx;
 /*                                                             MAIN CODE START                                                                      */
 /****************************************************************************************************************************************************/
 
-#ifndef MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_
-#define MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_
+#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_TWOSUM_H_
+#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_TWOSUM_H_
 
 /****************************************************************************************************************************************************/
 /*                                                           O(LOGN) Algorithm                                                                      */
@@ -83,59 +83,46 @@ using namespace __gnu_cxx;
 /****************************************************************************************************************************************************/
 /*                                                            O(N) Algorithm                                                                        */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumON(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
-    }
-    hash_map<int, bool> presenceMap;
-    hash_map<int, bool>::iterator itToPresenceMap;
-    for (unsigned int counter = 0; counter < userInput.size(); counter++) {
-        if ((itToPresenceMap = presenceMap.find(targetSum - userInput[counter])) != presenceMap.end()) {
-            return new iPair(userInput[counter], targetSum - userInput[counter]);
+vector<int> twoSumON(vector<int> &userInput, int target) {
+    vector<int> result;
+    map<int, int> auxSpace;
+    map<int, int>::iterator itToAuxSpace;
+    for (int crawler = 0; crawler < userInput.size(); crawler++) {
+        if ((itToAuxSpace = auxSpace.find(target - userInput[crawler])) != auxSpace.end()) {
+            result.push_back(min(crawler, itToAuxSpace->second));
+            result.push_back(max(crawler, itToAuxSpace->second));
+            return result;
         }
+        auxSpace.insert(pair<int, int>(userInput[crawler], crawler));
     }
-    return null;
+    return result;
 }
+
 /****************************************************************************************************************************************************/
 /*                                                          O(N*LOGN) Algorithm                                                                     */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumONLOGNSort(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
-    }
-    sort(userInput.begin(), userInput.end());
-    int frontCrawler = 0, rearCrawler = userInput.size() - 1;
-    int currentSum;
-    while (frontCrawler < rearCrawler) {
-        currentSum = userInput[frontCrawler] + userInput[rearCrawler];
-        if (currentSum == targetSum) {
-            return new iPair(userInput[frontCrawler], userInput[rearCrawler]);
-        } else if (currentSum < targetSum) {
-            frontCrawler++;
-        } else {
-            rearCrawler++;
-        }
-    }
-    return null;
-}
+
 /****************************************************************************************************************************************************/
 /*                                                           O(N^2) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumON2(vector<int> userInput, int targetSum) {
+vector<int> twoSum(vector<int> &userInput, int target) {
+    vector<int> result;
     if (userInput.size() < 2) {
-        return null;
+        return result;
     }
-    for (unsigned int outerCrawler = 0; outerCrawler < userInput.size(); outerCrawler++) {
+    for (unsigned int outerCrawler = 0; outerCrawler < userInput.size() - 1; outerCrawler++) {
         for (unsigned int innerCrawler = outerCrawler + 1; innerCrawler < userInput.size(); innerCrawler++) {
-            if (userInput[outerCrawler] + userInput[innerCrawler] == targetSum) {
-                return new iPair(userInput[outerCrawler], userInput[innerCrawler]);
+            if (userInput[outerCrawler] + userInput[innerCrawler] == target) {
+                result.push_back(outerCrawler);
+                result.push_back(innerCrawler);
+                return result;
             }
         }
     }
-    return null;
+    return result;
 }
 /****************************************************************************************************************************************************/
 /*                                                           O(C^N) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
 
-#endif /* MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_ */
+#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_TWOSUM_H_ */

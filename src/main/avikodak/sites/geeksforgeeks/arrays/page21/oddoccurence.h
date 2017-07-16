@@ -1,7 +1,7 @@
 /****************************************************************************************************************************************************
- *  File Name                   : getpairforsum.h
- *  File Location               : /algos_v3/src/main/avikodak/sites/geeksforgeeks/arrays/page21/getpairforsum.h
- *  Created on                  : May 6, 2017 :: 11:55:04 AM
+ *  File Name                   : oddoccurence.h
+ *  File Location               : /algos_v3/src/main/avikodak/sites/geeksforgeeks/arrays/page21/oddoccurence.h
+ *  Created on                  : May 9, 2017 :: 10:52:43 PM
  *  Author                      : avikodak
  *  Testing Status              : TODO
  *  URL                         : TODO
@@ -73,8 +73,8 @@ using namespace __gnu_cxx;
 /*                                                             MAIN CODE START                                                                      */
 /****************************************************************************************************************************************************/
 
-#ifndef MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_
-#define MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_
+#ifndef MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_ODDOCCURENCE_H_
+#define MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_ODDOCCURENCE_H_
 
 /****************************************************************************************************************************************************/
 /*                                                           O(LOGN) Algorithm                                                                      */
@@ -83,59 +83,53 @@ using namespace __gnu_cxx;
 /****************************************************************************************************************************************************/
 /*                                                            O(N) Algorithm                                                                        */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumON(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
-    }
-    hash_map<int, bool> presenceMap;
-    hash_map<int, bool>::iterator itToPresenceMap;
+int getOddOccuringValue(vector<int> userInput) {
+    int xorResult = 0;
     for (unsigned int counter = 0; counter < userInput.size(); counter++) {
-        if ((itToPresenceMap = presenceMap.find(targetSum - userInput[counter])) != presenceMap.end()) {
-            return new iPair(userInput[counter], targetSum - userInput[counter]);
-        }
+        xorResult ^= userInput[counter];
     }
-    return null;
+    return xorResult;
 }
+
 /****************************************************************************************************************************************************/
 /*                                                          O(N*LOGN) Algorithm                                                                     */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumONLOGNSort(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
-    }
+int getOddOccuringValueSort(vector<int> userInput) {
     sort(userInput.begin(), userInput.end());
-    int frontCrawler = 0, rearCrawler = userInput.size() - 1;
-    int currentSum;
-    while (frontCrawler < rearCrawler) {
-        currentSum = userInput[frontCrawler] + userInput[rearCrawler];
-        if (currentSum == targetSum) {
-            return new iPair(userInput[frontCrawler], userInput[rearCrawler]);
-        } else if (currentSum < targetSum) {
-            frontCrawler++;
-        } else {
-            rearCrawler++;
+    int outerCrawler = 0;
+    int innerCrawler, frequency;
+    while (outerCrawler < userInput.size()) {
+        innerCrawler = outerCrawler;
+        frequency = 0;
+        while (innerCrawler < userInput.size() && userInput[innerCrawler] == userInput[outerCrawler]) {
+            frequency++;
+            innerCrawler++;
         }
+        if (frequency & 1) {
+            return userInput[outerCrawler];
+        }
+        outerCrawler = innerCrawler;
     }
-    return null;
+    return INT_MIN;
 }
+
 /****************************************************************************************************************************************************/
 /*                                                           O(N^2) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumON2(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
-    }
+int getOddOccuringON2(vector<int> userInput) {
+    int frequency = 0;
     for (unsigned int outerCrawler = 0; outerCrawler < userInput.size(); outerCrawler++) {
-        for (unsigned int innerCrawler = outerCrawler + 1; innerCrawler < userInput.size(); innerCrawler++) {
-            if (userInput[outerCrawler] + userInput[innerCrawler] == targetSum) {
-                return new iPair(userInput[outerCrawler], userInput[innerCrawler]);
+        frequency = 0;
+        for (unsigned int innerCrawler = outerCrawler; innerCrawler < userInput.size(); innerCrawler++) {
+            if (userInput[outerCrawler] == userInput[innerCrawler]) {
+                frequency++;
             }
         }
+        if (frequency & 1) {
+            return userInput[outerCrawler];
+        }
     }
-    return null;
+    return INT_MIN;
 }
-/****************************************************************************************************************************************************/
-/*                                                           O(C^N) Algorithm                                                                       */
-/****************************************************************************************************************************************************/
 
-#endif /* MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_ */
+#endif /* MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_ODDOCCURENCE_H_ */

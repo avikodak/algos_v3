@@ -8,6 +8,7 @@
  ****************************************************************************************************************************************************/
 
 #include <libv2/constants/constants.h>
+#include <libv2/ds/treeds.h>
 
 /****************************************************************************************************************************************************/
 /*                                                         NAMESPACE DECLARATION AND IMPORTS                                                        */
@@ -97,6 +98,135 @@ int getSizeInOrderTraversal(itNode *ptr) {
         return 0;
     }
     return getSizeInOrderTraversal(ptr->left) + 1 + getSizeInOrderTraversal(ptr->right);
+}
+
+int getSizePostOrderTraversal(itNode *ptr) {
+    if (ptr == null) {
+        return 0;
+    }
+    return getSizePostOrderTraversal(ptr->left) + getSizePostOrderTraversal(ptr->right) + 1;
+}
+
+int getSizeOfTreeIterativePreOrder(itNode *ptr) {
+    if (ptr == null) {
+        return 0;
+    }
+    stack<itNode *> auxSpace;
+    auxSpace.push(ptr);
+    itNode *currentNode;
+    int size = 0;
+    while (!auxSpace.empty()) {
+        currentNode = auxSpace.top();
+        auxSpace.pop();
+        size++;
+        if (currentNode->right != null) {
+            auxSpace.push(currentNode->right);
+        }
+        if (currentNode->left != null) {
+            auxSpace.push(currentNode->left);
+        }
+    }
+    return size;
+}
+
+int getSizeOfTreeMorrisPreOrder(itNode *ptr) {
+    if (ptr == null) {
+        return 0;
+    }
+    itNode *currentNode = ptr;
+    itNode *temp;
+    int size = 0;
+    while (currentNode != null) {
+        if (currentNode->left != null) {
+            temp = currentNode->left;
+            while (temp->right != null && temp->right != currentNode) {
+                temp = temp->right;
+            }
+            if (temp->right == null) {
+                size++;
+                temp->right = currentNode;
+                currentNode = currentNode->left;
+            } else {
+                temp->right = null;
+                currentNode = currentNode->right;
+            }
+        } else {
+            size++;
+            currentNode = currentNode->right;
+        }
+    }
+    return size;
+}
+
+int getSizeOfTreeInOrderTraversalIterative(itNode *ptr) {
+    if (ptr == null) {
+        return 0;
+    }
+    stack<itNode *> auxSpace;
+    itNode *currentNode = ptr;
+    int size = 0;
+    while (!auxSpace.empty() || currentNode != null) {
+        if (currentNode != null) {
+            auxSpace.push(currentNode);
+            currentNode = currentNode->left;
+        } else {
+            currentNode = auxSpace.top();
+            auxSpace.pop();
+            size++;
+            currentNode = currentNode->right;
+        }
+    }
+    return size;
+}
+
+int getSizeOfTreeMorrisInOrder(itNode *ptr) {
+    if (ptr == null) {
+        return 0;
+    }
+    int size = 0;
+    itNode *currentNode = ptr;
+    itNode *temp;
+    while (currentNode != null) {
+        if (currentNode->left != null) {
+            temp = currentNode->left;
+            while (temp->right != null && temp->right != currentNode) {
+                temp = temp->right;
+            }
+            if (temp->right == null) {
+                temp->right = currentNode;
+                currentNode = currentNode->left;
+            } else {
+                size++;
+                temp->right = null;
+                currentNode = currentNode->right;
+            }
+        } else {
+            size++;
+            currentNode = currentNode->right;
+        }
+    }
+    return size;
+}
+
+int getSizeOfTreePostOrderIterativeTwoStacks(itNode *ptr) {
+    if (ptr == null) {
+        return 0;
+    }
+    stack<itNode *> primaryAuxSpace, secondaryAuxSpace;
+    primaryAuxSpace.push(ptr);
+    itNode *currentNode;
+    while (!primaryAuxSpace.empty()) {
+        currentNode = primaryAuxSpace.top();
+        primaryAuxSpace.pop();
+        secondaryAuxSpace.push(currentNode);
+        if (currentNode->left != null) {
+            primaryAuxSpace.push(currentNode->left);
+        }
+        if (currentNode->right != null) {
+            primaryAuxSpace.push(currentNode->right);
+        }
+    }
+    return secondaryAuxSpace.size();
 }
 
 /****************************************************************************************************************************************************/

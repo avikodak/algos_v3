@@ -1,11 +1,16 @@
 /****************************************************************************************************************************************************
- *  File Name                   : getpairforsum.h
- *  File Location               : /algos_v3/src/main/avikodak/sites/geeksforgeeks/arrays/page21/getpairforsum.h
- *  Created on                  : May 6, 2017 :: 11:55:04 AM
+ *  File Name                   : majorityelement.h
+ *  File Location               : /algos_v3/src/main/avikodak/sites/geeksforgeeks/arrays/page21/majorityelement.h
+ *  Created on                  : May 9, 2017 :: 12:19:10 PM
  *  Author                      : avikodak
  *  Testing Status              : TODO
  *  URL                         : TODO
  ****************************************************************************************************************************************************/
+
+#include <libv2/constants/constants.h>
+
+#include "../../../../../../libv3/ds/treeds.h"
+#include "../../../../../../libv3/utils/bstutils.h"
 
 /****************************************************************************************************************************************************/
 /*                                                         NAMESPACE DECLARATION AND IMPORTS                                                        */
@@ -73,8 +78,8 @@ using namespace __gnu_cxx;
 /*                                                             MAIN CODE START                                                                      */
 /****************************************************************************************************************************************************/
 
-#ifndef MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_
-#define MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_
+#ifndef MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_MAJORITYELEMENT_H_
+#define MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_MAJORITYELEMENT_H_
 
 /****************************************************************************************************************************************************/
 /*                                                           O(LOGN) Algorithm                                                                      */
@@ -83,59 +88,118 @@ using namespace __gnu_cxx;
 /****************************************************************************************************************************************************/
 /*                                                            O(N) Algorithm                                                                        */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumON(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
+int getMajorityElementMooreVotingAlgo(vector<int> userInput) {
+    if (userInput.size() == 0) {
+        return INT_MIN;
     }
-    hash_map<int, bool> presenceMap;
-    hash_map<int, bool>::iterator itToPresenceMap;
-    for (unsigned int counter = 0; counter < userInput.size(); counter++) {
-        if ((itToPresenceMap = presenceMap.find(targetSum - userInput[counter])) != presenceMap.end()) {
-            return new iPair(userInput[counter], targetSum - userInput[counter]);
+    int prospectMajorityElement = userInput[0];
+    int frequency = 1;
+    for (unsigned int counter = 1; counter < userInput.size(); counter++) {
+        if (prospectMajorityElement == userInput[counter]) {
+            frequency++;
+        } else if (frequency == 1) {
+            prospectMajorityElement = userInput[counter];
+        } else {
+            frequency--;
         }
     }
-    return null;
+    frequency = 0;
+    for (unsigned int counter = 0; counter < userInput.size(); counter++) {
+        if (prospectMajorityElement == userInput[counter]) {
+            frequency++;
+        }
+    }
+    return frequency >= userInput.size() / 2 ? prospectMajorityElement : INT_MIN;
 }
+
+int getMajorityElementONHashMap(vector<int> userInput) {
+    if (userInput.size() == 0) {
+        return INT_MIN;
+    }
+    hash_map<int, unsigned int> frequencyMap;
+    hash_map<int, unsigned int>::iterator itToFrequencyMap;
+    for (unsigned int counter = 0; counter < userInput.size(); counter++) {
+        if ((itToFrequencyMap = frequencyMap.find(userInput[counter])) != frequencyMap.end()) {
+            frequencyMap[userInput[counter]]++;
+        } else {
+            frequencyMap[userInput[counter]] = 0;
+        }
+    }
+    for (itToFrequencyMap = frequencyMap.begin(); itToFrequencyMap != frequencyMap.end(); itToFrequencyMap++) {
+        if (itToFrequencyMap->second >= userInput.size() / 2) {
+            return itToFrequencyMap->first;
+        }
+    }
+    return INT_MIN;
+}
+
 /****************************************************************************************************************************************************/
 /*                                                          O(N*LOGN) Algorithm                                                                     */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumONLOGNSort(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
-    }
+int getMajorityElementONLogN(vector<int> userInput) {
     sort(userInput.begin(), userInput.end());
-    int frontCrawler = 0, rearCrawler = userInput.size() - 1;
-    int currentSum;
-    while (frontCrawler < rearCrawler) {
-        currentSum = userInput[frontCrawler] + userInput[rearCrawler];
-        if (currentSum == targetSum) {
-            return new iPair(userInput[frontCrawler], userInput[rearCrawler]);
-        } else if (currentSum < targetSum) {
-            frontCrawler++;
-        } else {
-            rearCrawler++;
+    int outerCrawler = 0;
+    int innerCrawler, frequency;
+    while (outerCrawler < userInput.size()) {
+        innerCrawler = outerCrawler;
+        frequency = 0;
+        while (innerCrawler < userInput.size() && userInput[innerCrawler] == userInput[outerCrawler]) {
+            innerCrawler++;
+            frequency++;
         }
+        if (frequency > userInput.size() / 2) {
+            return userInput[outerCrawler];
+        }
+        outerCrawler = innerCrawler;
     }
-    return null;
+    return INT_MIN;
 }
+
 /****************************************************************************************************************************************************/
 /*                                                           O(N^2) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumON2(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
+int getMajorityElementON2BST(vector<int> userInput) {
+    if (userInput.size() == 0) {
+        return INT_MIN;
     }
-    for (unsigned int outerCrawler = 0; outerCrawler < userInput.size(); outerCrawler++) {
-        for (unsigned int innerCrawler = outerCrawler + 1; innerCrawler < userInput.size(); innerCrawler++) {
-            if (userInput[outerCrawler] + userInput[innerCrawler] == targetSum) {
-                return new iPair(userInput[outerCrawler], userInput[innerCrawler]);
-            }
+    bstutils *util = new bstutils();
+    iftNode *root = util->getFreqBst(userInput);
+    stack<iftNode *> auxSpace;
+    auxSpace.push(root);
+    iftNode *currentNode;
+    while (!auxSpace.empty()) {
+        currentNode = auxSpace.top();
+        auxSpace.pop();
+        if (currentNode->frequency >= userInput.size() / 2) {
+            return currentNode->value;
+        }
+        if (currentNode->right != null) {
+            auxSpace.push(currentNode->right);
+        }
+        if (currentNode->left != null) {
+            auxSpace.push(currentNode->left);
         }
     }
-    return null;
+    return INT_MIN;
+}
+
+int getMajorityElementON2(vector<int> userInput) {
+    int frequency = 0;
+    for (unsigned int outerCrawler = 0; outerCrawler < userInput.size(); outerCrawler++) {
+        frequency = 0;
+        for (unsigned int innerCrawler = outerCrawler; innerCrawler < userInput.size(); innerCrawler++) {
+            if (userInput[outerCrawler] == userInput[innerCrawler]) {
+                frequency++;
+            }
+        }
+        if (frequency >= userInput.size() / 2) {
+            return userInput[outerCrawler];
+        }
+    }
+    return INT_MIN;
 }
 /****************************************************************************************************************************************************/
 /*                                                           O(C^N) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
 
-#endif /* MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_ */
+#endif /* MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_MAJORITYELEMENT_H_ */

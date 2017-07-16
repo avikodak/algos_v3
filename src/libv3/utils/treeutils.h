@@ -7,6 +7,8 @@
  *  URL                         : TODO
  ****************************************************************************************************************************************************/
 
+#include <libv3/ds/treeds.h>
+
 /****************************************************************************************************************************************************/
 /*                                                         NAMESPACE DECLARATION AND IMPORTS                                                        */
 /****************************************************************************************************************************************************/
@@ -77,24 +79,69 @@ using namespace __gnu_cxx;
 #ifndef LIBV3_UTILS_TREEUTILS_H_
 #define LIBV3_UTILS_TREEUTILS_H_
 
-/****************************************************************************************************************************************************/
-/*                                                           O(LOGN) Algorithm                                                                      */
-/****************************************************************************************************************************************************/
+class treeutil {
+ private:
+    itNode *getTree(vector<int> userInput, int index) {
+        if (userInput.size() == 0 || index >= userInput.size()) {
+            return null;
+        }
+        itNode *newNode = new itNode(userInput[index]);
+        newNode->left = getTree(userInput, 2 * index + 1);
+        newNode->right = getTree(userInput, 2 * index + 2);
+        return newNode;
+    }
 
-/****************************************************************************************************************************************************/
-/*                                                            O(N) Algorithm                                                                        */
-/****************************************************************************************************************************************************/
+    iptNode *getTreeWithParentPtr(vector<int> userInput, int index) {
+        if (userInput.size() == 0 || index >= userInput.size()) {
+            return null;
+        }
+        iptNode *newNode = new iptNode(userInput[index]);
+        newNode->left = getTreeWithParentPtr(userInput, 2 * index + 1);
+        newNode->right = getTreeWithParentPtr(userInput, 2 * index + 2);
+        if (newNode->left != null) {
+            newNode->left->parent = newNode;
+        }
+        if (newNode->right != null) {
+            newNode->right->parent = newNode;
+        }
+        return newNode;
+    }
 
-/****************************************************************************************************************************************************/
-/*                                                          O(N*LOGN) Algorithm                                                                     */
-/****************************************************************************************************************************************************/
+    itNode *getTree(hash_map<unsigned int, int> userInput, int index) {
+        if (userInput.size() == 0 || index >= userInput.size() || userInput.find(index) == userInput.end()) {
+            return null;
+        }
+        itNode *newNode = new itNode(userInput[index]);
+        newNode->left = getTree(userInput, 2 * index + 1);
+        newNode->right = getTree(userInput, 2 * index + 2);
+        return newNode;
+    }
+ public:
+    itNode *getTree(vector<int> userInput) {
+        return this->getTree(userInput, 0);
+    }
 
-/****************************************************************************************************************************************************/
-/*                                                           O(N^2) Algorithm                                                                       */
-/****************************************************************************************************************************************************/
+    itNode *getTreeWithParentPtr(vector<int> userInput) {
+        return getTreeWithParentPtr(userInput, 0);
+    }
 
-/****************************************************************************************************************************************************/
-/*                                                           O(C^N) Algorithm                                                                       */
-/****************************************************************************************************************************************************/
+    itNode *getTree(hash_map<unsigned int, int> userInput) {
+        return getTree(userInput, 0);
+    }
+
+    int getHeightOfTree(itNode *ptr) {
+        if (ptr == null) {
+            return 0;
+        }
+        return 1 + max(getHeightOfTree(ptr->left), getHeightOfTree(ptr->right));
+    }
+
+    int getSizeOfTree(itNode *ptr) {
+        if (ptr == null) {
+            return 0;
+        }
+        return 1 + getSizeOfTree(ptr->left) + getSizeOfTree(ptr->right);
+    }
+};
 
 #endif /* LIBV3_UTILS_TREEUTILS_H_ */

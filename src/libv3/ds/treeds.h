@@ -41,6 +41,7 @@ using namespace __gnu_cxx;
 #include <stdexcept>
 #include <limits.h>
 #include <stdint.h>
+#include <libv3/constants/constants.h>
 
 /****************************************************************************************************************************************************/
 /*                                                            USER DEFINED CONSTANTS                                                                */
@@ -60,6 +61,43 @@ struct itNode {
     int value;
     itNode *left;
     itNode *right;
+
+ public:
+    itNode() {
+        this->value = 0;
+        this->left = null;
+        this->right = null;
+    }
+
+    itNode(int value) {
+        this->value = value;
+        this->left = null;
+        this->right = null;
+    }
+};
+
+/**
+ * Represents integet binary tree node with frequency
+ */
+struct iftNode {
+    int value;
+    int frequency;
+    iftNode *left;
+    iftNode *right;
+ public:
+    iftNode() {
+        this->value = 0;
+        this->frequency = 0;
+        this->left = null;
+        this->right = null;
+    }
+
+    iftNode(int value) {
+        this->value = value;
+        this->frequency = 1;
+        this->left = null;
+        this->right = null;
+    }
 };
 
 /**

@@ -7,6 +7,8 @@
  *  URL                         : TODO
  ****************************************************************************************************************************************************/
 
+#include "../ds/treeds.h"
+
 /****************************************************************************************************************************************************/
 /*                                                         NAMESPACE DECLARATION AND IMPORTS                                                        */
 /****************************************************************************************************************************************************/
@@ -77,24 +79,84 @@ using namespace __gnu_cxx;
 #ifndef LIBV3_UTILS_BSTUTILS_H_
 #define LIBV3_UTILS_BSTUTILS_H_
 
-/****************************************************************************************************************************************************/
-/*                                                           O(LOGN) Algorithm                                                                      */
-/****************************************************************************************************************************************************/
+class bstutils {
+ private:
+    void insert(itNode **root, int value) {
+        if (*root == null) {
+            (*root) = new itNode(value);
+            return;
+        }
+        itNode *crawler = *root;
+        while (true) {
+            if (crawler->value == value) {
+                return;
+            } else if (crawler->value > value) {
+                if (crawler->left == null) {
+                    crawler->left = new itNode(value);
+                    return;
+                } else {
+                    crawler = crawler->left;
+                }
+            } else {
+                if (crawler->right == null) {
+                    crawler->right = new itNode(value);
+                    return;
+                } else {
+                    crawler = crawler->right;
+                }
+            }
+        }
+    }
 
-/****************************************************************************************************************************************************/
-/*                                                            O(N) Algorithm                                                                        */
-/****************************************************************************************************************************************************/
+    void insert(iftNode **root, int value) {
+        if (*root == null) {
+            (*root) = new iftNode(value);
+            return;
+        }
+        iftNode *crawler = *root;
+        while (true) {
+            if (crawler->value == value) {
+                crawler->frequency++;
+                return;
+            } else if (crawler->value > value) {
+                if (crawler->left == null) {
+                    crawler->left = new iftNode(value);
+                    return;
+                } else {
+                    crawler = crawler->left;
+                }
+            } else {
+                if (crawler->right == null) {
+                    crawler->right = new iftNode(value);
+                    return;
+                } else {
+                    crawler = crawler->right;
+                }
+            }
+        }
+    }
+ public:
+    itNode *getBst(vector<int> userInput) {
+        if (userInput.size() == 0) {
+            return null;
+        }
+        itNode *root = null;
+        for (unsigned int counter = 0; counter < userInput.size(); counter++) {
+            this->insert(&root, userInput[counter]);
+        }
+        return root;
+    }
 
-/****************************************************************************************************************************************************/
-/*                                                          O(N*LOGN) Algorithm                                                                     */
-/****************************************************************************************************************************************************/
-
-/****************************************************************************************************************************************************/
-/*                                                           O(N^2) Algorithm                                                                       */
-/****************************************************************************************************************************************************/
-
-/****************************************************************************************************************************************************/
-/*                                                           O(C^N) Algorithm                                                                       */
-/****************************************************************************************************************************************************/
+    iftNode *getFreqBst(vector<int> userInput) {
+        if (userInput.size() == 0) {
+            return null;
+        }
+        iftNode *root = null;
+        for (unsigned int counter = 0; counter < userInput.size(); counter++) {
+            this->insert(&root, userInput[counter]);
+        }
+        return root;
+    }
+};
 
 #endif /* LIBV3_UTILS_BSTUTILS_H_ */

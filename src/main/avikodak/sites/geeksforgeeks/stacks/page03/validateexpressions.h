@@ -1,7 +1,7 @@
 /****************************************************************************************************************************************************
- *  File Name                   : getpairforsum.h
- *  File Location               : /algos_v3/src/main/avikodak/sites/geeksforgeeks/arrays/page21/getpairforsum.h
- *  Created on                  : May 6, 2017 :: 11:55:04 AM
+ *  File Name                   : validateexpressions.h
+ *  File Location               : /algos_v3/src/main/avikodak/sites/geeksforgeeks/stacks/page03/validateexpressions.h
+ *  Created on                  : May 10, 2017 :: 11:18:14 AM
  *  Author                      : avikodak
  *  Testing Status              : TODO
  *  URL                         : TODO
@@ -73,8 +73,8 @@ using namespace __gnu_cxx;
 /*                                                             MAIN CODE START                                                                      */
 /****************************************************************************************************************************************************/
 
-#ifndef MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_
-#define MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_
+#ifndef MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_STACKS_PAGE03_VALIDATEEXPRESSIONS_H_
+#define MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_STACKS_PAGE03_VALIDATEEXPRESSIONS_H_
 
 /****************************************************************************************************************************************************/
 /*                                                           O(LOGN) Algorithm                                                                      */
@@ -83,59 +83,41 @@ using namespace __gnu_cxx;
 /****************************************************************************************************************************************************/
 /*                                                            O(N) Algorithm                                                                        */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumON(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
+bool validateExpressions(string userInput) {
+    if (userInput.size() == 0) {
+        return true;
     }
-    hash_map<int, bool> presenceMap;
-    hash_map<int, bool>::iterator itToPresenceMap;
+    if (userInput.size() & 2) {
+        return false;
+    }
+    stack<char> auxSpace;
     for (unsigned int counter = 0; counter < userInput.size(); counter++) {
-        if ((itToPresenceMap = presenceMap.find(targetSum - userInput[counter])) != presenceMap.end()) {
-            return new iPair(userInput[counter], targetSum - userInput[counter]);
+        if (userInput[counter] == '{' || userInput[counter] == '(') {
+            auxSpace.push(userInput[counter]);
+        } else {
+            if (userInput[counter] == '}') {
+                if (auxSpace.top() != '{') {
+                    return false;
+                }
+            } else if (auxSpace.top() != '(') {
+                return false;
+            }
+            auxSpace.pop();
         }
     }
-    return null;
+    return auxSpace.empty();
 }
+
 /****************************************************************************************************************************************************/
 /*                                                          O(N*LOGN) Algorithm                                                                     */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumONLOGNSort(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
-    }
-    sort(userInput.begin(), userInput.end());
-    int frontCrawler = 0, rearCrawler = userInput.size() - 1;
-    int currentSum;
-    while (frontCrawler < rearCrawler) {
-        currentSum = userInput[frontCrawler] + userInput[rearCrawler];
-        if (currentSum == targetSum) {
-            return new iPair(userInput[frontCrawler], userInput[rearCrawler]);
-        } else if (currentSum < targetSum) {
-            frontCrawler++;
-        } else {
-            rearCrawler++;
-        }
-    }
-    return null;
-}
+
 /****************************************************************************************************************************************************/
 /*                                                           O(N^2) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumON2(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
-    }
-    for (unsigned int outerCrawler = 0; outerCrawler < userInput.size(); outerCrawler++) {
-        for (unsigned int innerCrawler = outerCrawler + 1; innerCrawler < userInput.size(); innerCrawler++) {
-            if (userInput[outerCrawler] + userInput[innerCrawler] == targetSum) {
-                return new iPair(userInput[outerCrawler], userInput[innerCrawler]);
-            }
-        }
-    }
-    return null;
-}
+
 /****************************************************************************************************************************************************/
 /*                                                           O(C^N) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
 
-#endif /* MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_ */
+#endif /* MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_STACKS_PAGE03_VALIDATEEXPRESSIONS_H_ */

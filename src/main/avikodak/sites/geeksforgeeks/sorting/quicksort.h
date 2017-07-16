@@ -1,7 +1,7 @@
 /****************************************************************************************************************************************************
- *  File Name                   : getpairforsum.h
- *  File Location               : /algos_v3/src/main/avikodak/sites/geeksforgeeks/arrays/page21/getpairforsum.h
- *  Created on                  : May 6, 2017 :: 11:55:04 AM
+ *  File Name                   : quicksort.h
+ *  File Location               : /algos_v3/src/main/avikodak/sites/geeksforgeeks/sorting/quicksort.h
+ *  Created on                  : May 14, 2017 :: 6:58:23 PM
  *  Author                      : avikodak
  *  Testing Status              : TODO
  *  URL                         : TODO
@@ -73,8 +73,8 @@ using namespace __gnu_cxx;
 /*                                                             MAIN CODE START                                                                      */
 /****************************************************************************************************************************************************/
 
-#ifndef MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_
-#define MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_
+#ifndef MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_SORTING_QUICKSORT_H_
+#define MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_SORTING_QUICKSORT_H_
 
 /****************************************************************************************************************************************************/
 /*                                                           O(LOGN) Algorithm                                                                      */
@@ -83,59 +83,41 @@ using namespace __gnu_cxx;
 /****************************************************************************************************************************************************/
 /*                                                            O(N) Algorithm                                                                        */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumON(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
-    }
-    hash_map<int, bool> presenceMap;
-    hash_map<int, bool>::iterator itToPresenceMap;
-    for (unsigned int counter = 0; counter < userInput.size(); counter++) {
-        if ((itToPresenceMap = presenceMap.find(targetSum - userInput[counter])) != presenceMap.end()) {
-            return new iPair(userInput[counter], targetSum - userInput[counter]);
-        }
-    }
-    return null;
-}
+
 /****************************************************************************************************************************************************/
 /*                                                          O(N*LOGN) Algorithm                                                                     */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumONLOGNSort(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
-    }
-    sort(userInput.begin(), userInput.end());
-    int frontCrawler = 0, rearCrawler = userInput.size() - 1;
-    int currentSum;
-    while (frontCrawler < rearCrawler) {
-        currentSum = userInput[frontCrawler] + userInput[rearCrawler];
-        if (currentSum == targetSum) {
-            return new iPair(userInput[frontCrawler], userInput[rearCrawler]);
-        } else if (currentSum < targetSum) {
-            frontCrawler++;
-        } else {
-            rearCrawler++;
-        }
-    }
-    return null;
-}
+
 /****************************************************************************************************************************************************/
 /*                                                           O(N^2) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
-iPair *getPairForSumON2(vector<int> userInput, int targetSum) {
-    if (userInput.size() < 2) {
-        return null;
+int getDividingIndex(vector<int> &userInput, int startIndex, int endIndex) {
+    if (startIndex >= endIndex) {
+        return startIndex > endIndex ? INT_MIN : startIndex;
     }
-    for (unsigned int outerCrawler = 0; outerCrawler < userInput.size(); outerCrawler++) {
-        for (unsigned int innerCrawler = outerCrawler + 1; innerCrawler < userInput.size(); innerCrawler++) {
-            if (userInput[outerCrawler] + userInput[innerCrawler] == targetSum) {
-                return new iPair(userInput[outerCrawler], userInput[innerCrawler]);
-            }
+    int key = userInput[endIndex];
+    int fillIndex = startIndex;
+    for (unsigned int counter = startIndex; counter < endIndex; counter++) {
+        if (userInput[counter] <= key) {
+            swap(userInput[counter], userInput[fillIndex]);
+            fillIndex++;
         }
     }
-    return null;
+    swap(userInput[fillIndex], userInput[endIndex]);
+    return fillIndex;
 }
+
+void quickSort(vector<int> &userInput, int startIndex, int endIndex) {
+    if (userInput.size() < 2) {
+        return;
+    }
+    int dividingIndex = getDividingIndex(userInput, startIndex, endIndex);
+    quickSort(userInput, startIndex, dividingIndex - 1);
+    quickSort(userInput, dividingIndex + 1, endIndex);
+}
+
 /****************************************************************************************************************************************************/
 /*                                                           O(C^N) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
 
-#endif /* MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_ARRAYS_PAGE21_GETPAIRFORSUM_H_ */
+#endif /* MAIN_AVIKODAK_SITES_GEEKSFORGEEKS_SORTING_QUICKSORT_H_ */
