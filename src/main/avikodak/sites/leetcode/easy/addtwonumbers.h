@@ -1,7 +1,7 @@
 /****************************************************************************************************************************************************
- *  File Name                   : reverseinteger.h
- *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/reverseinteger.h
- *  Created on                  : Jul 16, 2017 :: 6:36:51 PM
+ *  File Name                   : addtwonumbers.h
+ *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/addtwonumbers.h
+ *  Created on                  : Jul 16, 2017 :: 10:22:26 PM
  *  Author                      : avikodak
  *  Testing Status              : TODO
  *  URL                         : TODO
@@ -73,8 +73,18 @@ using namespace __gnu_cxx;
 /*                                                             MAIN CODE START                                                                      */
 /****************************************************************************************************************************************************/
 
-#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_REVERSEINTEGER_H_
-#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_REVERSEINTEGER_H_
+#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_ADDTWONUMBERS_H_
+#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_ADDTWONUMBERS_H_
+
+struct ListNode {
+    int val;
+    ListNode *next;
+ public:
+    ListNode(int val) {
+        this->val = val;
+        this->next = null;
+    }
+};
 
 /****************************************************************************************************************************************************/
 /*                                                           O(LOGN) Algorithm                                                                      */
@@ -83,31 +93,43 @@ using namespace __gnu_cxx;
 /****************************************************************************************************************************************************/
 /*                                                            O(N) Algorithm                                                                        */
 /****************************************************************************************************************************************************/
-int reverse(int userInput) {
-    int result = 0;
-    bool isNegative = userInput < 0;
-    bool isOverflowing = false;
-    userInput = abs(userInput);
-    while (userInput > 0) {
-        if (INT_MAX / 10 < result) {
-            isOverflowing = true;
-            break;
-        }
-        result *= 10;
-        if (INT_MAX - userInput % 10 < result) {
-            isOverflowing = true;
-            break;
-        }
-        result += userInput % 10;
-        userInput /= 10;
+ListNode *addTwoNumbers(ListNode *firstPtr, ListNode *secondPtr) {
+    if (firstPtr == null) {
+        return secondPtr;
     }
-    if (result < 0 || isOverflowing) {
-        return 0;
-    } else if (isNegative) {
-        return -1 * result;
-    } else {
-        return result;
+    if (secondPtr == null) {
+        return firstPtr;
     }
+    ListNode *result = null, *resultTailPtr;
+    resultTailPtr = null;
+    int currentSum = firstPtr->val + secondPtr->val;
+    firstPtr = firstPtr->next;
+    secondPtr = secondPtr->next;
+    result = new ListNode((currentSum) % 10);
+    resultTailPtr = result;
+    int carry = currentSum / 10;
+    while (firstPtr != null || secondPtr != null) {
+        if (secondPtr == null) {
+            currentSum = firstPtr->val + carry;
+            firstPtr = firstPtr->next;
+        } else if (firstPtr == null) {
+            currentSum = secondPtr->val + carry;
+            secondPtr = secondPtr->next;
+        } else {
+            currentSum = firstPtr->val + secondPtr->val + carry;
+            firstPtr = firstPtr->next;
+            secondPtr = secondPtr->next;
+        }
+        resultTailPtr->next = new ListNode(currentSum % 10);
+        carry = currentSum / 10;
+        resultTailPtr = resultTailPtr->next;
+    }
+    while (carry > 0) {
+        resultTailPtr->next = new ListNode(carry % 10);
+        resultTailPtr = resultTailPtr->next;
+        carry /= 10;
+    }
+    return result;
 }
 
 /****************************************************************************************************************************************************/
@@ -122,4 +144,4 @@ int reverse(int userInput) {
 /*                                                           O(C^N) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
 
-#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_REVERSEINTEGER_H_ */
+#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_ADDTWONUMBERS_H_ */

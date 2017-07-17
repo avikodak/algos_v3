@@ -1,10 +1,10 @@
 /****************************************************************************************************************************************************
- *  File Name                   : reverseinteger.h
- *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/reverseinteger.h
- *  Created on                  : Jul 16, 2017 :: 6:36:51 PM
+ *  File Name                   : removeelement.h
+ *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/removeelement.h
+ *  Created on                  : Jul 16, 2017 :: 10:46:09 PM
  *  Author                      : avikodak
  *  Testing Status              : TODO
- *  URL                         : TODO
+ *  URL                         : https://leetcode.com/problems/remove-element/#/description
  ****************************************************************************************************************************************************/
 
 /****************************************************************************************************************************************************/
@@ -73,8 +73,8 @@ using namespace __gnu_cxx;
 /*                                                             MAIN CODE START                                                                      */
 /****************************************************************************************************************************************************/
 
-#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_REVERSEINTEGER_H_
-#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_REVERSEINTEGER_H_
+#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_REMOVEELEMENT_H_
+#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_REMOVEELEMENT_H_
 
 /****************************************************************************************************************************************************/
 /*                                                           O(LOGN) Algorithm                                                                      */
@@ -83,31 +83,14 @@ using namespace __gnu_cxx;
 /****************************************************************************************************************************************************/
 /*                                                            O(N) Algorithm                                                                        */
 /****************************************************************************************************************************************************/
-int reverse(int userInput) {
-    int result = 0;
-    bool isNegative = userInput < 0;
-    bool isOverflowing = false;
-    userInput = abs(userInput);
-    while (userInput > 0) {
-        if (INT_MAX / 10 < result) {
-            isOverflowing = true;
-            break;
+int removeElement(vector<int>& nums, int val) {
+    int nonMatchingCount = -1;
+    for (unsigned int crawler = 0; crawler < nums.size(); crawler++) {
+        if (nums[crawler] != val) {
+            nums[++nonMatchingCount] = nums[crawler];
         }
-        result *= 10;
-        if (INT_MAX - userInput % 10 < result) {
-            isOverflowing = true;
-            break;
-        }
-        result += userInput % 10;
-        userInput /= 10;
     }
-    if (result < 0 || isOverflowing) {
-        return 0;
-    } else if (isNegative) {
-        return -1 * result;
-    } else {
-        return result;
-    }
+    return nonMatchingCount + 1;
 }
 
 /****************************************************************************************************************************************************/
@@ -122,4 +105,4 @@ int reverse(int userInput) {
 /*                                                           O(C^N) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
 
-#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_REVERSEINTEGER_H_ */
+#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_REMOVEELEMENT_H_ */
