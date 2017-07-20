@@ -1,10 +1,10 @@
 /****************************************************************************************************************************************************
- *  File Name                   : atoi.h
- *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/atoi.h
- *  Created on                  : Jul 19, 2017 :: 9:29:39 AM
+ *  File Name                   : validparentheses.h
+ *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/validparentheses.h
+ *  Created on                  : Jul 20, 2017 :: 11:07:22 AM
  *  Author                      : avikodak
  *  Testing Status              : TODO
- *  URL                         : https://leetcode.com/problems/string-to-integer-atoi/#/description
+ *  URL                         : https://leetcode.com/problems/valid-parentheses/#/description
  ****************************************************************************************************************************************************/
 
 /****************************************************************************************************************************************************/
@@ -73,8 +73,8 @@ using namespace __gnu_cxx;
 /*                                                             MAIN CODE START                                                                      */
 /****************************************************************************************************************************************************/
 
-#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_ATOI_H_
-#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_ATOI_H_
+#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_VALIDPARENTHESES_H_
+#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_VALIDPARENTHESES_H_
 
 /****************************************************************************************************************************************************/
 /*                                                           O(LOGN) Algorithm                                                                      */
@@ -83,36 +83,35 @@ using namespace __gnu_cxx;
 /****************************************************************************************************************************************************/
 /*                                                            O(N) Algorithm                                                                        */
 /****************************************************************************************************************************************************/
-int atoi(string userInput) {
-    int result = 0;
-    bool isInputNegative = false;
+bool isValidParenthesis(string userInput) {
     if (userInput.size() == 0) {
-        return result;
+        return true;
     }
-    int crawler = 0;
-    while (userInput[crawler] == ' ') {
-        crawler++;
-    }
-    if (userInput[crawler] == '-' || userInput[crawler] == '+') {
-        isInputNegative = (userInput[crawler] == '-');
-        crawler++;
-    }
-    for (; crawler < userInput.size(); crawler++) {
-        if (userInput[crawler] >= '0' && userInput[crawler] <= '9') {
-            int digit = userInput[crawler] - '0';
-            if (result > (INT_MAX / 10) || result * 10 + digit < result * 10) {
-                if (isInputNegative) {
-                    return INT_MIN;
-                } else {
-                    return INT_MAX;
+    stack<char> auxSpace;
+    for (unsigned int counter = 0; counter < userInput.size(); counter++) {
+        if (userInput[counter] == '(' || userInput[counter] == '{' || userInput[counter] == '[') {
+            auxSpace.push(userInput[counter]);
+        } else {
+            if (auxSpace.empty()) {
+                return false;
+            }
+            if (userInput[counter] == ')') {
+                if (auxSpace.top() != '(') {
+                    return false;
+                }
+            } else if (userInput[counter] == '}') {
+                if (auxSpace.top() != '{') {
+                    return false;
+                }
+            } else {
+                if (auxSpace.top() != '[') {
+                    return false;
                 }
             }
-            result = (result << 3) + (result << 1) + (digit);
-        } else {
-            break;
+            auxSpace.pop();
         }
     }
-    return isInputNegative ? -1 * result : result;
+    return auxSpace.empty();
 }
 
 /****************************************************************************************************************************************************/
@@ -127,4 +126,4 @@ int atoi(string userInput) {
 /*                                                           O(C^N) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
 
-#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_ATOI_H_ */
+#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_VALIDPARENTHESES_H_ */

@@ -1,10 +1,10 @@
 /****************************************************************************************************************************************************
- *  File Name                   : atoi.h
- *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/atoi.h
- *  Created on                  : Jul 19, 2017 :: 9:29:39 AM
+ *  File Name                   : removeduplicatessortedarray.h
+ *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/removeduplicatessortedarray.h
+ *  Created on                  : Jul 20, 2017 :: 11:25:58 AM
  *  Author                      : avikodak
  *  Testing Status              : TODO
- *  URL                         : https://leetcode.com/problems/string-to-integer-atoi/#/description
+ *  URL                         : https://leetcode.com/problems/remove-duplicates-from-sorted-array/#/description
  ****************************************************************************************************************************************************/
 
 /****************************************************************************************************************************************************/
@@ -73,8 +73,8 @@ using namespace __gnu_cxx;
 /*                                                             MAIN CODE START                                                                      */
 /****************************************************************************************************************************************************/
 
-#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_ATOI_H_
-#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_ATOI_H_
+#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_REMOVEDUPLICATESSORTEDARRAY_H_
+#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_REMOVEDUPLICATESSORTEDARRAY_H_
 
 /****************************************************************************************************************************************************/
 /*                                                           O(LOGN) Algorithm                                                                      */
@@ -83,38 +83,21 @@ using namespace __gnu_cxx;
 /****************************************************************************************************************************************************/
 /*                                                            O(N) Algorithm                                                                        */
 /****************************************************************************************************************************************************/
-int atoi(string userInput) {
-    int result = 0;
-    bool isInputNegative = false;
+int removeDuplicates(vector<int> &userInput) {
     if (userInput.size() == 0) {
-        return result;
+        return 0;
     }
-    int crawler = 0;
-    while (userInput[crawler] == ' ') {
-        crawler++;
-    }
-    if (userInput[crawler] == '-' || userInput[crawler] == '+') {
-        isInputNegative = (userInput[crawler] == '-');
-        crawler++;
-    }
-    for (; crawler < userInput.size(); crawler++) {
-        if (userInput[crawler] >= '0' && userInput[crawler] <= '9') {
-            int digit = userInput[crawler] - '0';
-            if (result > (INT_MAX / 10) || result * 10 + digit < result * 10) {
-                if (isInputNegative) {
-                    return INT_MIN;
-                } else {
-                    return INT_MAX;
-                }
-            }
-            result = (result << 3) + (result << 1) + (digit);
-        } else {
-            break;
+    int fillCounter = -1;
+    int frontCrawler = 0, rearCrawler = 0;
+    while (frontCrawler < userInput.size()) {
+        while (rearCrawler < userInput.size() && userInput[frontCrawler] == userInput[rearCrawler]) {
+            rearCrawler++;
         }
+        userInput[++fillCounter] = userInput[frontCrawler];
+        frontCrawler = rearCrawler;
     }
-    return isInputNegative ? -1 * result : result;
+    return fillCounter + 1;
 }
-
 /****************************************************************************************************************************************************/
 /*                                                          O(N*LOGN) Algorithm                                                                     */
 /****************************************************************************************************************************************************/
@@ -127,4 +110,4 @@ int atoi(string userInput) {
 /*                                                           O(C^N) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
 
-#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_ATOI_H_ */
+#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_REMOVEDUPLICATESSORTEDARRAY_H_ */

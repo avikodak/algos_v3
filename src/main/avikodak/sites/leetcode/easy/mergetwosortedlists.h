@@ -1,10 +1,10 @@
 /****************************************************************************************************************************************************
- *  File Name                   : atoi.h
- *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/atoi.h
- *  Created on                  : Jul 19, 2017 :: 9:29:39 AM
+ *  File Name                   : mergetwosortedlists.h
+ *  File Location               : /algos_v3/src/main/avikodak/sites/leetcode/easy/mergetwosortedlists.h
+ *  Created on                  : Jul 20, 2017 :: 12:42:55 AM
  *  Author                      : avikodak
  *  Testing Status              : TODO
- *  URL                         : https://leetcode.com/problems/string-to-integer-atoi/#/description
+ *  URL                         : https://leetcode.com/problems/merge-two-sorted-lists/#/description
  ****************************************************************************************************************************************************/
 
 /****************************************************************************************************************************************************/
@@ -73,8 +73,8 @@ using namespace __gnu_cxx;
 /*                                                             MAIN CODE START                                                                      */
 /****************************************************************************************************************************************************/
 
-#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_ATOI_H_
-#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_ATOI_H_
+#ifndef MAIN_AVIKODAK_SITES_LEETCODE_EASY_MERGETWOSORTEDLISTS_H_
+#define MAIN_AVIKODAK_SITES_LEETCODE_EASY_MERGETWOSORTEDLISTS_H_
 
 /****************************************************************************************************************************************************/
 /*                                                           O(LOGN) Algorithm                                                                      */
@@ -83,36 +83,38 @@ using namespace __gnu_cxx;
 /****************************************************************************************************************************************************/
 /*                                                            O(N) Algorithm                                                                        */
 /****************************************************************************************************************************************************/
-int atoi(string userInput) {
-    int result = 0;
-    bool isInputNegative = false;
-    if (userInput.size() == 0) {
-        return result;
+struct ListNode {
+    int val;
+    ListNode *next;
+ public:
+    ListNode(int x) {
+        this->val = x;
+        this->next = NULL;
     }
-    int crawler = 0;
-    while (userInput[crawler] == ' ') {
-        crawler++;
-    }
-    if (userInput[crawler] == '-' || userInput[crawler] == '+') {
-        isInputNegative = (userInput[crawler] == '-');
-        crawler++;
-    }
-    for (; crawler < userInput.size(); crawler++) {
-        if (userInput[crawler] >= '0' && userInput[crawler] <= '9') {
-            int digit = userInput[crawler] - '0';
-            if (result > (INT_MAX / 10) || result * 10 + digit < result * 10) {
-                if (isInputNegative) {
-                    return INT_MIN;
-                } else {
-                    return INT_MAX;
-                }
-            }
-            result = (result << 3) + (result << 1) + (digit);
+};
+
+ListNode* mergeTwoLists(ListNode* firstInput, ListNode* secondInput) {
+    ListNode *mergedList = new ListNode(INT_MAX);
+    ListNode *crawler = mergedList;
+    while (firstInput != null && secondInput != null) {
+        if (firstInput->val < secondInput->val) {
+            crawler->next = firstInput;
+            firstInput = firstInput->next;
+            crawler = crawler->next;
         } else {
-            break;
+            crawler->next = secondInput;
+            secondInput = secondInput->next;
+            crawler = crawler->next;
         }
+        crawler->next = null;
     }
-    return isInputNegative ? -1 * result : result;
+    if (firstInput != null) {
+        crawler->next = firstInput;
+    }
+    if (secondInput != null) {
+        crawler->next = secondInput;
+    }
+    return mergedList->next;
 }
 
 /****************************************************************************************************************************************************/
@@ -127,4 +129,4 @@ int atoi(string userInput) {
 /*                                                           O(C^N) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
 
-#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_ATOI_H_ */
+#endif /* MAIN_AVIKODAK_SITES_LEETCODE_EASY_MERGETWOSORTEDLISTS_H_ */
