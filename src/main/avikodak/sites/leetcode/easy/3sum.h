@@ -154,6 +154,47 @@ vector<vector<int> > threeSum(vector<int> userInput) {
     return result;
 }
 
+vector<vector<int> > threeSumWithoutSet(vector<int> userInput) {
+    vector<vector<int> > result;
+    if (userInput.size() < 3) {
+        return result;
+    }
+    sort(userInput.begin(), userInput.end());
+    int firstCrawler = 0;
+    int currentSum;
+    while (firstCrawler < userInput.size() - 2) {
+        int secondCrawler = firstCrawler + 1;
+        int thirdCrawler = userInput.size() - 1;
+        while (secondCrawler < thirdCrawler) {
+            currentSum = userInput[firstCrawler] + userInput[secondCrawler] + userInput[thirdCrawler];
+            if (currentSum == 0) {
+                vector<int> currentTriplet;
+                currentTriplet.push_back(userInput[firstCrawler]);
+                currentTriplet.push_back(userInput[secondCrawler]);
+                currentTriplet.push_back(userInput[thirdCrawler]);
+                result.push_back(currentTriplet);
+                while (thirdCrawler - 1 >= 0 && userInput[thirdCrawler - 1] == userInput[thirdCrawler]) {
+                    thirdCrawler--;
+                }
+                thirdCrawler--;
+                while (secondCrawler + 1 < userInput.size() && userInput[secondCrawler] == userInput[secondCrawler + 1]) {
+                    secondCrawler++;
+                }
+                secondCrawler++;
+            } else if (currentSum < 0) {
+                secondCrawler++;
+            } else {
+                thirdCrawler--;
+            }
+        }
+        while (firstCrawler + 1 < userInput.size() && userInput[firstCrawler] == userInput[firstCrawler + 1]) {
+            firstCrawler++;
+        }
+        firstCrawler++;
+    }
+    return result;
+}
+
 /****************************************************************************************************************************************************/
 /*                                                           O(C^N) Algorithm                                                                       */
 /****************************************************************************************************************************************************/
